@@ -75,6 +75,13 @@ jobs:
                 color: label_color
               });
             }
+            // Remove the "status: running" label
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              name: 'status: running'
+            });
             // Add the label to the issue
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
