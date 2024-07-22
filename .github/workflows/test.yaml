@@ -14,3 +14,27 @@ jobs:
         run: |
           issue_body="${{ github.event.issue.body }}" 
           echo "Command from issue: $issue_body"
+      - name: Post Job Status Comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue_number = context.issue.number;
+            const job_status = '${{ steps.extract_and_run.outcome }}';
+            const comment_body = `The command has been executed. Job status: ${job_status}`;
+            github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: comment_body
+            });
+      - name: Close Issue
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed'
+            });
