@@ -4,18 +4,13 @@ on:
     types: [opened]
 jobs:
   run-command:
-    if: github.event.issue.title == 'Run the command'
+    if: github.event.issue.title == 'Run the command' && github.actor == 'making'
     runs-on: ubuntu-latest
     permissions:
       issues: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Extract and Run Command
-        id: extract_and_run
-        run: |
-          issue_body="${{ github.event.issue.body }}" 
-          echo "Command from issue: $issue_body"
       - name: Set Running Status Label
         uses: actions/github-script@v7
         with:
