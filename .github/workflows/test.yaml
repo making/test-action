@@ -41,13 +41,14 @@ jobs:
               labels: [label_name]
             });
       - name: Execute Command
+        id: execute_command
         run: ${{ github.event.issue.body }}
         continue-on-error: true
       - name: Post Job Status Comment
         uses: actions/github-script@v7
         with:
           script: |
-            const job_status = '${{ job.status }}';
+            const job_status = '${{ steps.execute_command.outcome }}';
             const job_url = `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
             const comment_body = `The command has been executed. Job status: ${job_status}. [View job details](${job_url})`;
             await github.rest.issues.createComment({
@@ -60,7 +61,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const job_status = '${{ job.status }}';
+            const job_status = '${{ steps.execute_command.outcome }}';
             const label_name = `status: ${job_status}`;
             let label_color;
             if (job_status === 'success') {
