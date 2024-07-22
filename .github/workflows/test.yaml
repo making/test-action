@@ -1,0 +1,16 @@
+name: Run Command on Issue
+on:
+  issues:
+    types: [opened]
+jobs:
+  run-command:
+    if: github.event.issue.title == 'Run the command'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Extract and Run Command
+        id: extract_and_run
+        run: |
+          issue_body="${{ github.event.issue.body }}" 
+          echo "Command from issue: $issue_body"
